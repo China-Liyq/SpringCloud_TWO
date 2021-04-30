@@ -1,11 +1,10 @@
 package com.chinaliyq.consumerserver.controller;
 
-import com.chinaliyq.consumerserver.beans.MyRestTemplate;
 import com.chinaliyq.consumerserver.beans.Person;
+import com.chinaliyq.consumerserver.interfaces.IMyApi;
 import com.chinaliyq.consumerserver.service.HealthStatusService;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,11 +14,12 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import javax.naming.Name;
-import java.util.Collections;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -47,8 +47,6 @@ public class MainController {
 
     @Autowired
     RestTemplate restTemplate;
-
-
 
     //手动获取实例对象，自行拼装远程访问路径
     @RequestMapping("/getHi-1")
@@ -143,7 +141,20 @@ public class MainController {
         return forEntity.getBody();
     }
 
-
+    @GetMapping("/getToBaidu")
+    public Object getToBaidu(String name,char sex,int age, HttpServletResponse response) throws Exception {
+        System.out.println("端口：" + port);
+        Person person = new Person(name, sex, age);
+        System.out.println(person);
+        String url = "http://providerserver/getToBaidu";
+        URI uri = restTemplate.postForLocation(url, person, Person.class);
+        System.out.println("uri:" + uri);
+        System.out.println(String.valueOf(uri));
+        System.out.println(uri.toString());
+        if (null!=uri)
+        response.sendRedirect(uri.toString());
+        return uri;
+    }
 
 
     @Autowired

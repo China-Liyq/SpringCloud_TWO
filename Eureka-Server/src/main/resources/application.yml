@@ -1,6 +1,6 @@
 eureka:
   client:
-    service-url.defaultZone: "http://euk1.com:7001/eureka/"
+    service-url.defaultZone: "http://liyq:123@euk1.com:7001/eureka/"
     register-with-eureka: true
     fetch-registry: true
     healthcheck:
